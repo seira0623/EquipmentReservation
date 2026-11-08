@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
         newUser.setStudentNumber(studentNumber);
         newUser.setRole(0);
         newUser.setPhone(phone);
+        newUser.setTokenVersion(0);
+        newUser.setAccountStatus(0);
         userMapper.insert(newUser);
 
         //返回结果

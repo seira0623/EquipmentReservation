@@ -41,13 +41,6 @@ class EquipmentReservationApplicationTests {
         userService.userLogin(userLoginDTO);
     }
 
-    @Test
-    void testJwt(){
-        String token = jwtUtil.generateToken(null);
-        System.out.println(token);
-        System.out.println(jwtUtil.parseUserId(token));
-        System.out.println(jwtUtil.isTokenExpired(token));
-    }
 }
 
 class SecretGenerator {

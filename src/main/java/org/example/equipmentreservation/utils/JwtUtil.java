@@ -29,11 +29,13 @@ public class JwtUtil {
      */
     @PostConstruct
     public void init(){
-        if(secret == null || secret.getBytes(StandardCharsets.UTF_8).length < 32){
-            throw new IllegalStateException("密钥为空或长度小于32字节");
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("JWT密钥不能为空");
         }
-
         byte[] keyBytes = Decoders.BASE64.decode(secret);
+        if(keyBytes.length < 32){
+            throw new IllegalStateException("密钥长度小于32字节");
+        }
         this.JWT_SECRET = Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -42,13 +44,14 @@ public class JwtUtil {
      * @param userId
      * @return token
      */
-    public String generateToken(Long userId){
-        if (userId == null) {
-            throw new IllegalArgumentException("用户ID为空");
+    public String generateToken(Long userId, Integer tokenVersion){
+        if (userId == null || userId <= 0 || tokenVersion == null) {
+            throw new IllegalArgumentException("用户身份信息不合法");
         }
-        Long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         return Jwts.builder()
                 .claim("userId", userId) //放进token的信息，只存入id
+                .claim("tokenVersion", tokenVersion)
                 .issuedAt(new Date(now)) //签发时间
                 .expiration(new Date(now + JWT_EXPIRE)) //过期时间
                 .signWith(JWT_SECRET, Jwts.SIG.HS256) //使用HS256算法和密钥进行签名
@@ -70,6 +73,20 @@ public class JwtUtil {
     }
 
     /**
+     * 从token中解析出token版本
+     * @param token
+     * @return token版本
+     */
+    public Integer parseTokenVersion(String token){
+        Claims claims = Jwts.parser()
+                .verifyWith(JWT_SECRET)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claims.get("tokenVersion", Integer.class);
+    }
+
+    /**
      * 验证token
      * @param token
      * @return 是否合法
@@ -81,6 +98,7 @@ public class JwtUtil {
 
         try{
             parseUserId(token);
+            parseTokenVersion(token);
             return true;
         } catch (JwtException | IllegalArgumentException exception){
             return false;
@@ -94,7 +112,7 @@ public class JwtUtil {
      */
     public Boolean isTokenExpired(String token){
         if (token == null || token.isBlank()) {
-            return false;
+            return true;
         }
         try {
             Claims claims = Jwts.parser()

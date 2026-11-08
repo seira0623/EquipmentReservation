@@ -20,6 +20,9 @@ public class SysUser {
     private String phone;
     private Integer role; // 0: user, 1: admin
 
+    private Integer tokenVersion;
+    private Integer accountStatus; // 0: 正常 1: 禁用
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
