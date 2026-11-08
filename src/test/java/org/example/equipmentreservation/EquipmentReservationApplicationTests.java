@@ -7,9 +7,13 @@ import org.example.equipmentreservation.entity.SysUser;
 import org.example.equipmentreservation.mapper.UserMapper;
 import org.example.equipmentreservation.service.UserService;
 import org.example.equipmentreservation.service.impl.UserServiceImpl;
+import org.example.equipmentreservation.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.security.SecureRandom;
+import java.util.Base64;
 
 @SpringBootTest
 class EquipmentReservationApplicationTests {
@@ -18,6 +22,8 @@ class EquipmentReservationApplicationTests {
     private UserMapper userMapper;
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @Test
     void testInsert() {
@@ -35,5 +41,26 @@ class EquipmentReservationApplicationTests {
         userService.userLogin(userLoginDTO);
     }
 
+    @Test
+    void testJwt(){
+        String token = jwtUtil.generateToken(null);
+        System.out.println(token);
+        System.out.println(jwtUtil.parseUserId(token));
+        System.out.println(jwtUtil.isTokenExpired(token));
+    }
+}
 
+class SecretGenerator {
+    public static void main(String[] args) {
+
+        byte[] key = new byte[32];
+
+        SecureRandom secureRandom = new SecureRandom();
+        secureRandom.nextBytes(key);
+
+        String secret = Base64.getEncoder()
+                .encodeToString(key);
+
+        System.out.println(secret);
+    }
 }
