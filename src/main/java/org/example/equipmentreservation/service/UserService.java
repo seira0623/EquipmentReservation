@@ -22,10 +22,10 @@ public interface UserService {
 
     /**
      * 当前用户信息查询方法
-     * @param userQueryDTO
+     * @param
      * @return 用户信息
      */
-    UserVO currentUserInfoQuery(AdminUserQueryDTO userQueryDTO);
+    UserVO currentUserInfoQuery();
 
     /**
      * 管理员查询用户信息方法
@@ -36,10 +36,10 @@ public interface UserService {
 
     /**
      * 用户更新方法
-     * @param userId,userUpdateDTO
+     * @param userUpdateDTO
      * @return
      */
-    void userInfoUpdate(Long userId,UserUpdateDTO userUpdateDTO);
+    void userInfoUpdate(UserUpdateDTO userUpdateDTO);
 
     /**
      * 用户密码修改方法

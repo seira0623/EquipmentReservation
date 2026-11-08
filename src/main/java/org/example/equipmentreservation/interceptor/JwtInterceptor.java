@@ -46,7 +46,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "用户不存在");
             return false;
         }
-        if(Integer.valueOf(1).equals(user.getAccountStatus())) {
+        if(!Integer.valueOf(1).equals(user.getAccountStatus())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "账号已被禁用");
             return false;
         }

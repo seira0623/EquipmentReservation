@@ -28,7 +28,7 @@ class EquipmentReservationApplicationTests {
     @Test
     void testInsert() {
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO();
-        userRegisterDTO.setUsername("test004");
+        userRegisterDTO.setUsername("test005");
         userRegisterDTO.setPassword("abc123456");
         userService.userRegister(userRegisterDTO);
     }
@@ -39,6 +39,14 @@ class EquipmentReservationApplicationTests {
         userLoginDTO.setUsername("test004");
         userLoginDTO.setPassword("abc123456");
         userService.userLogin(userLoginDTO);
+    }
+
+    @Test
+    void testJwt() {
+        String token = jwtUtil.generateToken(8L, 0);
+        System.out.println(token);
+        System.out.println(jwtUtil.parseUserId(token));
+        System.out.println(jwtUtil.parseTokenVersion(token));
     }
 
 }
