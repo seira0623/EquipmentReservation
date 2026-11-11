@@ -14,9 +14,11 @@ import org.example.equipmentreservation.dto.equipment.EquipmentQueryDTO;
 import org.example.equipmentreservation.dto.equipment.EquipmentStatusDTO;
 import org.example.equipmentreservation.entity.Equipment;
 import org.example.equipmentreservation.entity.EquipmentCategory;
+import org.example.equipmentreservation.entity.Reservation;
 import org.example.equipmentreservation.entity.SysUser;
 import org.example.equipmentreservation.mapper.EquipmentCategoryMapper;
 import org.example.equipmentreservation.mapper.EquipmentMapper;
+import org.example.equipmentreservation.mapper.ReservationMapper;
 import org.example.equipmentreservation.mapper.UserMapper;
 import org.example.equipmentreservation.service.EquipmentService;
 import org.example.equipmentreservation.vo.equipment.EquipmentVO;
@@ -35,6 +37,8 @@ public class EquipmentServiceImpl implements EquipmentService {
     private final UserMapper userMapper;
     private final EquipmentMapper equipmentMapper;
     private final EquipmentCategoryMapper equipmentCategoryMapper;
+    private final ReservationMapper reservationMapper;
+
 
 
 
@@ -129,9 +133,17 @@ public class EquipmentServiceImpl implements EquipmentService {
     public enum EquipmentStatus {
 
         AVAILABLE,
-        BORROWED,
         MAINTENANCE,
         DISABLED
+    }
+
+    public enum ReservationStatus{
+        PENDING,
+        APPROVED,
+        REJECTED,
+        CANCELLED,
+        BORROWED,
+        COMPLETED
     }
 
     @Override
@@ -141,9 +153,18 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (equipment == null) {
             throw new BussinessException("设备不存在");
         }
-        if(equipment.getStatus().equals(EquipmentStatus.BORROWED.name())){
-            throw new BussinessException("设备已借出，无法禁用");
+        //查询该仪器是否还有不是complete的预约记录
+        LambdaQueryWrapper<Reservation> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Reservation::getEquipmentId, id)
+                .in(Reservation::getStatus,
+                ReservationStatus.PENDING.name(),
+                ReservationStatus.APPROVED.name(),
+                ReservationStatus.BORROWED.name());
+        Long count = reservationMapper.selectCount(lambdaQueryWrapper);
+        if (count > 0) {
+            throw new BussinessException("设备有未完成的预约记录，无法禁用");
         }
+
         if(equipment.getStatus().equals(EquipmentStatus.DISABLED.name())){
             throw new BussinessException("设备已禁用，无法重复禁用");
         }
@@ -159,26 +180,37 @@ public class EquipmentServiceImpl implements EquipmentService {
         if (equipment == null) {
             throw new BussinessException("设备不存在");
         }
-        try{
-            EquipmentStatus equipmentStatus = EquipmentStatus.valueOf(equipmentStatusDTO.getStatus());
-        }catch(IllegalArgumentException | NullPointerException e){
-            throw new BussinessException("无效的状态");
+
+        String oldStatus = equipment.getStatus();
+
+        EquipmentStatus targetStatus;
+        try {
+            targetStatus = EquipmentStatus.valueOf(
+                    equipmentStatusDTO.getStatus()
+            );
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new BussinessException("无效的设备状态");
         }
+
         if(equipmentStatusDTO.getStatus().equals(EquipmentStatus.DISABLED.name())){
             throw new BussinessException("无法在此接口禁用设备，请去专门接口");
         }
-        if(equipment.getStatus().equals(EquipmentStatus.BORROWED.name())){
-            throw new BussinessException("设备已借出，无法更新状态");
-        }
-        if(equipmentStatusDTO.getStatus().equals(EquipmentStatus.BORROWED.name())){
-            throw new BussinessException("无法在此接口把设备改为借出状态");
+        LambdaQueryWrapper<Reservation> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Reservation::getEquipmentId, id)
+                .in(Reservation::getStatus,
+                        ReservationStatus.PENDING.name(),
+                        ReservationStatus.APPROVED.name(),
+                        ReservationStatus.BORROWED.name());
+        Long count = reservationMapper.selectCount(lambdaQueryWrapper);
+        if (count > 0) {
+            throw new BussinessException("设备有未完成的预约记录，无法禁用");
         }
         if(equipment.getStatus().equals(EquipmentStatus.DISABLED.name())){
             throw new BussinessException("设备已禁用，无法更新状态");
         }
-        equipment.setStatus(equipmentStatusDTO.getStatus());
+        equipment.setStatus(targetStatus.name());
         equipmentMapper.updateById(equipment);
-        log.info("设备{}状态由{}修改为{}", id, equipment.getStatus(), equipmentStatusDTO.getStatus());
+        log.info("设备{}状态由{}修改为{}", id, oldStatus, targetStatus.name());
     }
 
     @Override

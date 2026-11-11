@@ -27,4 +27,5 @@ public class Reservation {
     private Long reviewerId;
     private LocalDateTime reviewedTime;
     private String rejectReason;
+    private String cancelReason;
 }
