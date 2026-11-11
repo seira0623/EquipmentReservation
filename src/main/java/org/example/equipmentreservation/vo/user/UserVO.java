@@ -1,6 +1,5 @@
-package org.example.equipmentreservation.vo;
+package org.example.equipmentreservation.vo.user;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.time.LocalDateTime;

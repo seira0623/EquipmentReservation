@@ -8,13 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.example.equipmentreservation.common.BussinessException;
 import org.example.equipmentreservation.common.UserContext;
-import org.example.equipmentreservation.dto.*;
+import org.example.equipmentreservation.dto.user.*;
 import org.example.equipmentreservation.entity.SysUser;
 import org.example.equipmentreservation.mapper.UserMapper;
 import org.example.equipmentreservation.service.UserService;
 import org.example.equipmentreservation.utils.JwtUtil;
-import org.example.equipmentreservation.vo.LoginVO;
-import org.example.equipmentreservation.vo.UserVO;
+import org.example.equipmentreservation.vo.user.LoginVO;
+import org.example.equipmentreservation.vo.user.UserVO;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,8 +145,8 @@ public class UserServiceImpl implements UserService {
                 .eq(studentNumber != null && !studentNumber.isBlank(),SysUser::getStudentNumber, studentNumber)
                 .eq(phone != null && !phone.isBlank(),SysUser::getPhone, phone)
                 .eq(role != null, SysUser::getRole, role)
-                .orderByDesc(SysUser::getCreateTime)
-                .orderByDesc(SysUser::getId);
+                .orderByAsc(SysUser::getCreateTime)
+                .orderByAsc(SysUser::getId);
 
         IPage<SysUser> page = new Page<>(current, size);
         IPage<SysUser> userPage = userMapper.selectPage(page, queryWrapper);
@@ -193,7 +193,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void changePassword(UserChangePasswordDTO userChangePasswordDTO) {
         //拿取前端传来信息
-        String oldPassword = userChangePasswordDTO.getPassword();
+        String oldPassword = userChangePasswordDTO.getOldPassword();
         String newPassword = userChangePasswordDTO.getNewPassword();
 
         //查询用户

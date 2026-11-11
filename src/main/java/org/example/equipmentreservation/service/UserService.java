@@ -1,9 +1,9 @@
 package org.example.equipmentreservation.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.example.equipmentreservation.dto.*;
-import org.example.equipmentreservation.vo.LoginVO;
-import org.example.equipmentreservation.vo.UserVO;
+import org.example.equipmentreservation.dto.user.*;
+import org.example.equipmentreservation.vo.user.LoginVO;
+import org.example.equipmentreservation.vo.user.UserVO;
 
 public interface UserService {
     /**

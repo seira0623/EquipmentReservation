@@ -1,18 +1,23 @@
-package org.example.equipmentreservation.dto;
+package org.example.equipmentreservation.dto.equipment;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-@Data
-public class AdminUserQueryDTO {
-    private Long id;
-    private String username;
-    private String studentNumber;
-    private String phone;
-    private Integer role;
+import java.time.LocalDateTime;
 
-    //分页参数
+@Data
+public class EquipmentQueryDTO {
+    private Long id;
+    private String equipmentNumber;
+    private String equipmentName;
+    private Long categoryId;
+    private String lab;
+    private String model;
+    private String status;
+
+
     @Min(value = 1, message = "当前页码不能小于1")
     private Long current = 1L;
     @Min(value = 1, message = "每页大小不能小于1")

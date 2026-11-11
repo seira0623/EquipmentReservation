@@ -1,4 +1,4 @@
-package org.example.equipmentreservation.vo;
+package org.example.equipmentreservation.vo.user;
 
 import lombok.Data;
 

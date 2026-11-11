@@ -1,12 +1,9 @@
 package org.example.equipmentreservation;
 
-import lombok.RequiredArgsConstructor;
-import org.example.equipmentreservation.dto.UserLoginDTO;
-import org.example.equipmentreservation.dto.UserRegisterDTO;
-import org.example.equipmentreservation.entity.SysUser;
+import org.example.equipmentreservation.dto.user.UserLoginDTO;
+import org.example.equipmentreservation.dto.user.UserRegisterDTO;
 import org.example.equipmentreservation.mapper.UserMapper;
 import org.example.equipmentreservation.service.UserService;
-import org.example.equipmentreservation.service.impl.UserServiceImpl;
 import org.example.equipmentreservation.utils.JwtUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.equipmentreservation.common.Result;
-import org.example.equipmentreservation.dto.*;
+import org.example.equipmentreservation.dto.user.*;
 import org.example.equipmentreservation.service.UserService;
-import org.example.equipmentreservation.vo.LoginVO;
-import org.example.equipmentreservation.vo.UserVO;
-import org.springframework.validation.annotation.Validated;
+import org.example.equipmentreservation.vo.user.LoginVO;
+import org.example.equipmentreservation.vo.user.UserVO;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

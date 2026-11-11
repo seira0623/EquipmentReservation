@@ -1,4 +1,4 @@
-package org.example.equipmentreservation.dto;
+package org.example.equipmentreservation.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
