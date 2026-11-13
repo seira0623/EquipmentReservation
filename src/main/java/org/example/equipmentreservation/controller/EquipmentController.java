@@ -31,19 +31,19 @@ public class EquipmentController {
         return Result.success(equipmentVO);
     }
 
-    @PutMapping("{id}/disable")
+    @PutMapping("/{id}/disable")
     public Result<Void> disableEquipment(@PathVariable Long id) {
         equipmentService.disableEquipment(id);
         return Result.success();
     }
 
-    @PutMapping("{id}/status")
+    @PutMapping("/{id}/status")
     public Result<Void> updateEquipmentStatus(@PathVariable Long id, @RequestBody @Valid EquipmentStatusDTO equipmentStatusDTO) {
         equipmentService.updateEquipmentStatus(id, equipmentStatusDTO);
         return Result.success();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Result<EquipmentVO> getEquipment(@PathVariable Long id) {
         EquipmentVO equipmentVO = equipmentService.getEquipmentById(id);
         return Result.success(equipmentVO);

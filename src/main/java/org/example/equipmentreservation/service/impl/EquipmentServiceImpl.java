@@ -39,9 +39,6 @@ public class EquipmentServiceImpl implements EquipmentService {
     private final EquipmentCategoryMapper equipmentCategoryMapper;
     private final ReservationMapper reservationMapper;
 
-
-
-
     @Override
     public EquipmentVO addEquipment(EquipmentAddDTO equipmentAddDTO) {
         checkAdmin();

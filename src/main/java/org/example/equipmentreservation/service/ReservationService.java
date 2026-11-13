@@ -27,9 +27,12 @@ public interface ReservationService {
     //管理员查询所有预约记录
     public IPage<ReservationVO> adminReservationQuery(ReservationQueryDTO reservationQueryDTO);
 
+    //查询详细预约记录
+    public ReservationVO getReservationById(Long id);
+
     //借出设备
-    public void borrowReservation(Long reservationId);
+    public void borrowReservation(Long id);
 
     //归还设备
-    public void returnReservation(Long reservationId);
+    public void returnReservation(Long id);
 }
